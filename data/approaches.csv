@@ -1,0 +1,8 @@
+id,label,short_description,key_challenge
+direct-idp-small-molecule,Direct small-molecule binding to IDPs,Small molecules that bind transient pockets or shift the conformational ensemble of a disordered protein or region (e.g. AR N-terminal domain; MYC),Weak/dynamic binding and hard-to-prove target engagement; first clinical attempt (masofaniten) failed
+condensate-modulation,Condensate modulation,Drugs that dissolve; harden or reshape biomolecular condensates formed by IDR-driven phase separation,Mechanism-of-action ambiguity (condensate vs. client protein) and translation of in-vitro droplets to cells
+aggregation-inhibition,Aggregation / oligomer inhibition,Block nucleation; oligomerisation or fibril growth of disordered proteins such as alpha-synuclein; tau; amyloid-beta,Neurodegeneration trials are long and costly; biomarkers of target engagement are limited
+peptide-miniprotein-binder,Peptides; mini-proteins & designed binders,Peptides; mini-proteins or de-novo designed protein binders that wrap around disordered segments,Intracellular delivery and developability of biologics
+molecular-glue-stabilizer,Molecular glues / complex stabilizers,Small molecules that stabilise complexes between a disordered motif and its folded partner (e.g. 14-3-3),Selectivity across many partner complexes
+ai-ensemble-modelling,AI & physics ensemble modelling,Generative / ML models and simulations that predict conformational ensembles and binding for IDPs,Scarce ground-truth ensemble data; benchmarks mostly self-reported
+biophysics-platform,Biophysics & measurement platforms,Experimental platforms (HDX-MS; NMR; microfluidics; smFRET; SAXS) used to characterise ensembles and condensates at scale,Throughput and cost of ensemble-level measurements

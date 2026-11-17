@@ -1,0 +1,21 @@
+id,pi,institution,city,country,region,focus,company_links,link_type,tools,confidence,sources
+knowles,Tuomas Knowles,University of Cambridge,Cambridge,UK,Europe,Protein aggregation kinetics; microfluidics; condensates,transition-bio;wren,co-founder;SAB,,high,S21;S58;S59
+vendruscolo,Michele Vendruscolo,University of Cambridge (Centre for Misfolding Diseases),Cambridge,UK,Europe,Misfolding diseases; IDP ensembles; aggregation inhibitors,wren;bind-research,SAB;training (Heller PhD),,high,S58;S04
+heller,Gabi Heller,University College London,London,UK,Europe,IDP-small molecule interactions,bind-research,CEO,,high,S04
+salvatella,Xavier Salvatella,IRB Barcelona / ICREA,Barcelona,Spain,Europe,Androgen receptor IDR structural biology; condensate-targeting drugs,nuage,co-founder,,high,S06;S09
+hnisz,Denes Hnisz,MPI for Molecular Genetics,Berlin,Germany,Europe,Transcriptional condensates,nuage,co-founder,,high,S07;S09
+soucek,Laura Soucek,Vall d'Hebron Institute of Oncology (VHIO),Barcelona,Spain,Europe,MYC inhibition (Omomyc),peptomyc,co-founder,,high,S29
+griesinger,Christian Griesinger,MPI for Multidisciplinary Sciences,Göttingen,Germany,Europe,NMR; alpha-synuclein oligomer modulators,modag,scientific founder (verify),,medium,S32
+hyman,Anthony (Tony) Hyman,MPI-CBG,Dresden,Germany,Europe,Phase separation & condensate biology,dewpoint,co-founder,,high,S18;S56
+linse,Sara Linse,Lund University,Lund,Sweden,Europe,Aggregation kinetics,wren,SAB,,medium,S58
+lindorff-larsen,Kresten Lindorff-Larsen,University of Copenhagen,Copenhagen,Denmark,Europe,Simulations of IDPs; CALVADOS proteome-wide ensembles,,,CALVADOS,high,S66
+tosatto,Silvio Tosatto,University of Padova,Padova,Italy,Europe,Disorder databases & benchmarks,,,DisProt;MobiDB;PED;CAID,high,S43;S61;S62;S63
+brunsveld,Luc Brunsveld / Christian Ottmann,TU Eindhoven,Eindhoven,Netherlands,Europe,14-3-3 molecular glues,ambagon,scientific founders (verify),,low,S38
+young,Richard (Rick) Young,Whitehead Institute / MIT,Cambridge MA,USA,USA,Transcriptional condensates,dewpoint,co-founder,,high,S18;S56
+brangwynne,Clifford Brangwynne,Princeton University,Princeton,USA,USA,Physics of condensates,nereid,co-founder,,high,S23
+weitz,David Weitz,Harvard University,Cambridge MA,USA,USA,Microfluidics; soft matter,transition-bio,co-founder,,high,S21
+holehouse,Alex Holehouse,Washington University in St. Louis,St. Louis,USA,USA,Sequence-ensemble relationships; deep learning for IDRs,,,metapredict;ALBATROSS;STARLING,high,S41;S42;S65
+baker,David Baker,University of Washington (Institute for Protein Design),Seattle,USA,USA,De novo binders to disordered regions (logos; RFdiffusion),,,logos;RFdiffusion IDR binders,high,S39;S40;S67
+igi,Innovative Genomics Institute team,UC Berkeley,Berkeley,USA,USA,ARPA-H project on the 'language' of disordered proteins in neurodegeneration,,,,medium,S45
+sadar,Marianne Sadar,BC Cancer / University of British Columbia,Vancouver,Canada,USA,Androgen receptor N-terminal domain inhibitors,essa,scientific origin (verify),,low,S28
+li-pilong,Pilong Li,Tsinghua University,Beijing,China,China,Phase separation mechanisms; DropScan condensate drug screening,tuanxiang,scientific co-founder,DropScan,high,S47;S48

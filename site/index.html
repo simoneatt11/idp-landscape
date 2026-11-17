@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDP Landscape Explorer</title>
+<style>
+:root{
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --seq0:#f0efec; --seq1:#cde2fb; --seq2:#9ec5f4; --seq3:#5598e7; --seq4:#256abf; --seq5:#104281;
+  --ink0:#0b0b0b; --ink1:#0b0b0b; --ink2s:#0b0b0b; --ink3:#ffffff; --ink4:#ffffff; --ink5:#ffffff;
+  --critical:#d03b3b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+    --seq0:#262624; --seq1:#104281; --seq2:#184f95; --seq3:#256abf; --seq4:#3987e5; --seq5:#86b6ef;
+    --ink0:#f0efec; --ink1:#f0efec; --ink2s:#f0efec; --ink3:#ffffff; --ink4:#0b0b0b; --ink5:#0b0b0b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  --seq0:#262624; --seq1:#104281; --seq2:#184f95; --seq3:#256abf; --seq4:#3987e5; --seq5:#86b6ef;
+    --ink0:#f0efec; --ink1:#f0efec; --ink2s:#f0efec; --ink3:#ffffff; --ink4:#0b0b0b; --ink5:#0b0b0b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1120px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:26px;margin:0 0 4px} h2{font-size:18px;margin:0 0 4px}
+.sub{color:var(--ink2);margin:0 0 20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.tile .v{font-size:26px;font-weight:600} .tile .l{color:var(--ink2);font-size:13px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center}
+select,input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 10px;min-height:36px}
+input{flex:1;min-width:180px}
+button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.two>*{min-width:0} main{overflow-x:hidden} #tbl{min-width:760px} .bar-row{grid-template-columns:96px minmax(0,1fr) 28px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--grid);vertical-align:top}
+th{color:var(--ink2);font-weight:600;font-size:13px}
+.heat td.c{text-align:center;font-variant-numeric:tabular-nums;font-weight:600;border:2px solid var(--surface);border-radius:4px;min-width:56px}
+.heat th.r{white-space:nowrap}
+.bar-row{display:grid;grid-template-columns:110px 1fr 28px;gap:8px;align-items:center;margin:6px 0;font-size:13px}
+.bar-track{height:14px}
+.bar{height:14px;background:var(--s1);border-radius:0 4px 4px 0;min-width:2px}
+.bar-row .n{font-variant-numeric:tabular-nums;color:var(--ink2)}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid var(--border);color:var(--ink2);margin:0 4px 4px 0}
+.conf-low{border-style:dashed}
+details summary{cursor:pointer}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;font-size:13px;margin:8px 0}
+.kv div:nth-child(odd){color:var(--muted)}
+.tl{list-style:none;padding:0;margin:0}
+.tl li{display:grid;grid-template-columns:84px 14px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--grid);font-size:14px}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:6px;box-shadow:0 0 0 2px var(--surface)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink2);margin-bottom:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+svg text{fill:var(--ink2);font-size:12px}
+#tip{position:fixed;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.15);display:none;max-width:280px;z-index:10}
+a{color:var(--s1)}
+footer{color:var(--muted);font-size:13px;margin-top:24px}
+</style>
+</head>
+<body>
+<main>
+  <h1>IDP Landscape Explorer</h1>
+  <p class="sub">Startups, labs and tools working on intrinsically disordered proteins and condensates, covering Europe, the USA and China. <span id="built"></span></p>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="filters" role="group" aria-label="Filters">
+    <select id="fRegion" aria-label="Region"><option value="">All regions</option></select>
+    <select id="fApproach" aria-label="Approach"><option value="">All approaches</option></select>
+    <select id="fRel" aria-label="Relevance"><option value="">Core + adjacent</option><option value="core">Core only</option><option value="adjacent">Adjacent only</option></select>
+    <input id="fText" type="search" placeholder="Search name, target, investor, person…" aria-label="Search">
+    <button id="reset">Reset</button>
+  </div>
+
+  <div class="two">
+    <section class="card">
+      <h2>Where the activity is</h2>
+      <p class="hint">Organisations by region and primary approach. Darker means more organisations.</p>
+      <div class="scroll"><table class="heat" id="heat"></table></div>
+    </section>
+    <section class="card">
+      <h2>Development stage</h2>
+      <p class="hint">Furthest stage reached by each organisation's lead program.</p>
+      <div id="stages"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Academia → companies</h2>
+    <p class="hint">Founder, SAB and alumni links from labs to organisations. Hover a node to highlight its links.</p>
+    <div class="scroll"><svg id="net" role="img" aria-label="Network of academic groups linked to companies"></svg></div>
+  </section>
+
+  <section class="card">
+    <h2>Companies</h2>
+    <p class="hint">Click a row for details and sources. A dashed tag means low confidence: verify before citing.</p>
+    <div class="scroll"><table id="tbl"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Timeline</h2>
+    <div class="legend" id="tlLegend"></div>
+    <ul class="tl" id="tl"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Tools & databases</h2>
+    <div class="scroll"><table id="tools"></table></div>
+  </section>
+
+  <footer>All data comes from <code>data/*.csv</code> and is generated by <code>scripts/build.py</code>. Compiled from public sources; not investment advice.</footer>
+</main>
+<div id="tip" role="tooltip"></div>
+<script src="data.js"></script>
+<script>
+const D = window.IDP_DATA;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const split = v => (v||"").split(";").map(x=>x.trim()).filter(Boolean);
+const APPR = Object.fromEntries(D.approaches.map(a=>[a.id,a.label]));
+const SRC = Object.fromEntries(D.sources.map(s=>[s.id,s]));
+const REGIONS = ["Europe","USA","China"];
+const tip = $("#tip");
+function showTip(e, html){ tip.innerHTML = html; tip.style.display="block"; moveTip(e); }
+function moveTip(e){ const x=Math.min(e.clientX+14, innerWidth-300); tip.style.left=x+"px"; tip.style.top=(e.clientY+14)+"px"; }
+function hideTip(){ tip.style.display="none"; }
+
+$("#built").textContent = `Data built ${D.built}.`;
+REGIONS.forEach(r => $("#fRegion").insertAdjacentHTML("beforeend", `<option>${r}</option>`));
+D.approaches.forEach(a => $("#fApproach").insertAdjacentHTML("beforeend", `<option value="${a.id}">${esc(a.label)}</option>`));
+
+function filtered(){
+  const r=$("#fRegion").value, a=$("#fApproach").value, rel=$("#fRel").value, t=$("#fText").value.toLowerCase();
+  return D.companies.filter(c =>
+    (!r || c.region===r) &&
+    (!a || c.approach===a || split(c.approach_secondary).includes(a)) &&
+    (!rel || c.relevance===rel) &&
+    (!t || Object.values(c).join(" ").toLowerCase().includes(t)));
+}
+
+function tiles(list){
+  const money = list.reduce((s,c)=>s+(parseFloat(c.funding_total_usd_m)||0),0);
+  const clinical = list.filter(c=>/^phase/.test(c.stage)).length;
+  const closed = list.filter(c=>["closed","discontinued"].includes(c.stage)).length;
+  const t = [
+    [list.length, "organisations"],
+    [REGIONS.map(r=>list.filter(c=>c.region===r).length).join(" · "), "Europe · USA · China"],
+    [clinical, "in clinical trials"],
+    [closed, "closed / discontinued"],
+    ["$"+Math.round(money)+"M", "disclosed funding (lower bound)"],
+  ];
+  $("#tiles").innerHTML = t.map(([v,l])=>`<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+}
+
+function heat(list){
+  const max = Math.max(1, ...D.approaches.flatMap(a=>REGIONS.map(r=>list.filter(c=>c.region===r&&c.approach===a.id).length)));
+  const steps=["--seq0","--seq1","--seq2","--seq3","--seq4","--seq5"];
+  let h = `<tr><th>Approach</th>${REGIONS.map(r=>`<th style="text-align:center">${r}</th>`).join("")}</tr>`;
+  D.approaches.forEach(a=>{
+    h += `<tr><th class="r">${esc(a.label)}</th>`;
+    REGIONS.forEach(r=>{
+      const cs = list.filter(c=>c.region===r&&c.approach===a.id);
+      const n = cs.length, step = n ? Math.max(1, Math.round(n/max*5)) : 0;
+      const ink = `var(${["--ink0","--ink1","--ink2s","--ink3","--ink4","--ink5"][step]})`;
+      h += `<td class="c" style="background:var(${steps[step]});color:${ink}" data-tip="${esc(`<b>${r} · ${a.label}</b><br>${n} org${n===1?"":"s"}${n?": "+cs.map(c=>c.name).join(", "):""}`)}">${n||"·"}</td>`;
+    });
+    h += "</tr>";
+  });
+  $("#heat").innerHTML = h;
+}
+
+function stages(list){
+  const order = D.stages.filter(s=>list.some(c=>c.stage===s));
+  const max = Math.max(1,...order.map(s=>list.filter(c=>c.stage===s).length));
+  $("#stages").innerHTML = order.map(s=>{
+    const cs=list.filter(c=>c.stage===s);
+    return `<div class="bar-row" data-tip="${esc(`<b>${s}</b><br>${cs.map(c=>c.name).join(", ")}`)}"><span>${s}</span><div class="bar-track"><div class="bar" style="width:${cs.length/max*100}%"></div></div><span class="n">${cs.length}</span></div>`;
+  }).join("") || `<p class="hint">No organisations match the filters.</p>`;
+}
+
+function network(list){
+  const ids = new Set(list.map(c=>c.id));
+  const labs = D.academia.filter(a=>split(a.company_links).some(id=>ids.has(id)));
+  const comps = list.filter(c=>labs.some(a=>split(a.company_links).includes(c.id)));
+  const rowH=26, top=40, H=Math.max(labs.length,comps.length)*rowH+top, W=900, xL=340, xR=W-260;
+  const yL=i=>top+i*rowH+(H-top-labs.length*rowH)/2+rowH/2, yR=i=>top+i*rowH+(H-top-comps.length*rowH)/2+rowH/2;
+  const svg=$("#net"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width",W); svg.setAttribute("height",H);
+  let s="";
+  labs.forEach((a,i)=>split(a.company_links).forEach(cid=>{
+    const j=comps.findIndex(c=>c.id===cid); if(j<0) return;
+    s+=`<path class="edge" data-l="${a.id}" data-c="${cid}" d="M${xL},${yL(i)} C${(xL+xR)/2},${yL(i)} ${(xL+xR)/2},${yR(j)} ${xR},${yR(j)}" fill="none" stroke="var(--axis)" stroke-width="2"/>`;
+  }));
+  labs.forEach((a,i)=>{ s+=`<g class="node" data-l="${a.id}" data-tip="${esc(`<b>${a.pi}</b><br>${a.institution}<br>${a.focus}<br><i>${a.link_type}</i>`)}"><rect x="0" y="${yL(i)-12}" width="${xL}" height="24" fill="transparent"/><text x="${xL-12}" y="${yL(i)+4}" text-anchor="end">${esc(a.pi)} · ${esc(a.institution.split(" (")[0].split(" / ")[0])}</text><circle cx="${xL}" cy="${yL(i)}" r="5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"/></g>`; });
+  comps.forEach((c,j)=>{ s+=`<g class="node" data-c="${c.id}" data-tip="${esc(`<b>${c.name}</b><br>${c.region} · ${APPR[c.approach]}<br>${c.stage}`)}"><rect x="${xR}" y="${yR(j)-12}" width="260" height="24" fill="transparent"/><circle cx="${xR}" cy="${yR(j)}" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/><text x="${xR+12}" y="${yR(j)+4}">${esc(c.name)}</text></g>`; });
+  s+=`<text x="${xL}" y="16" text-anchor="end" style="font-weight:600">Academic groups</text><text x="${xR}" y="16" style="font-weight:600">Organisations</text>`;
+  svg.innerHTML = labs.length ? s : `<text x="10" y="20">No academic links for the current filter.</text>`;
+  svg.querySelectorAll(".node").forEach(n=>{
+    n.addEventListener("mouseenter",()=>{ const l=n.dataset.l, c=n.dataset.c;
+      svg.querySelectorAll(".edge").forEach(e=>{ const on=(l&&e.dataset.l===l)||(c&&e.dataset.c===c); e.setAttribute("stroke", on?"var(--ink2)":"var(--grid)"); });});
+    n.addEventListener("mouseleave",()=>svg.querySelectorAll(".edge").forEach(e=>e.setAttribute("stroke","var(--axis)")));
+  });
+}
+
+function srcLinks(v){ return split(v).map(id=>SRC[id]?`<a href="${esc(SRC[id].url)}" target="_blank" rel="noopener" title="${esc(SRC[id].title)}">${id}</a>`:id).join(", "); }
+
+function table(list){
+  const G="display:grid;grid-template-columns:1.3fr .6fr 1.2fr .7fr 1.4fr .5fr .8fr;gap:6px;padding:8px 6px;border-bottom:1px solid var(--grid)";
+  let h=`<tr><td colspan="7" style="padding:0"><div style="${G};color:var(--ink2);font-weight:600;font-size:13px;padding-left:22px"><span>Organisation</span><span>Region</span><span>Approach</span><span>Stage</span><span>Lead / targets</span><span>Funding</span><span>Status</span></div></td></tr>`;
+  list.forEach(c=>{
+    const f=c.funding_total_usd_m?`$${+c.funding_total_usd_m}M`:"n/d";
+    h+=`<tr><td colspan="7" style="padding:0;border:0"><details><summary style="${G}">
+      <span><b>${esc(c.name)}</b> <span class="tag ${c.confidence==="low"?"conf-low":""}">${c.confidence}</span>${c.relevance==="adjacent"?'<span class="tag">adjacent</span>':""}</span>
+      <span>${c.region}</span><span>${esc(APPR[c.approach])}</span><span>${c.stage}</span><span>${esc(c.lead_asset||c.targets)}</span><span style="font-variant-numeric:tabular-nums">${f}</span><span>${esc(c.status)}</span></summary>
+      <div class="kv">
+        ${[["Location",[c.city,c.country].filter(Boolean).join(" · ")],["Founded",c.founded],["Therapeutic areas",c.therapeutic_areas],["Modality",c.modality],["Secondary approaches",split(c.approach_secondary).map(a=>APPR[a]).join("; ")],["Funding notes",c.funding_notes],["Investors",c.key_investors],["Partners",c.partners],["Academic origin",c.academic_origin],["Key people",c.key_people],["Latest event",c.last_event?`${c.last_event} (${c.last_event_date})`:""],["Notes",c.notes]]
+          .filter(([,v])=>v).map(([k,v])=>`<div>${k}</div><div>${esc(v)}</div>`).join("")}
+        ${c.website?`<div>Website</div><div><a href="${esc(c.website)}" target="_blank" rel="noopener">${esc(c.website)}</a></div>`:""}
+        <div>Sources</div><div>${srcLinks(c.sources)} · verified ${c.last_verified}</div>
+      </div></details></td></tr>`;
+  });
+  $("#tbl").innerHTML = list.length ? h : `<tr><td>No organisations match.</td></tr>`;
+}
+
+const ETYPE = {"funding":["Funding & deals","var(--s1)"],"deal":["Funding & deals","var(--s1)"],"clinical":["Clinical & science","var(--s3)"],"science":["Clinical & science","var(--s3)"],"setback":["Setback","var(--critical)"]};
+function timeline(list){
+  const ids=new Set(list.map(c=>c.id)), filt=$("#fRegion").value||$("#fApproach").value||$("#fRel").value||$("#fText").value;
+  const ev=D.events.filter(e=>!filt || (e.company_id && ids.has(e.company_id)) || (!e.company_id && !$("#fRegion").value)).sort((a,b)=>a.date.localeCompare(b.date));
+  $("#tlLegend").innerHTML = [["Funding & deals","var(--s1)"],["Clinical & science","var(--s3)"],["Setback ✕","var(--critical)"]].map(([l,c])=>`<span><i class="dot" style="background:${c};margin:0"></i>${l}</span>`).join("");
+  $("#tl").innerHTML = ev.map(e=>`<li><span style="font-variant-numeric:tabular-nums;color:var(--ink2)">${e.date}</span><i class="dot" style="background:${ETYPE[e.type][1]}"></i><span>${e.type==="setback"?"✕ ":""}${esc(e.title)} <span class="tag">${e.type}</span> <small>${srcLinks(e.sources)}</small></span></li>`).join("");
+}
+
+function tools(){
+  $("#tools").innerHTML = `<tr><th>Name</th><th>Type</th><th>Maintainer</th><th>What it does</th></tr>` + D.tools.map(t=>`<tr><td>${t.url?`<a href="${esc(t.url)}" target="_blank" rel="noopener">${esc(t.name)}</a>`:esc(t.name)}</td><td>${esc(t.category)}</td><td>${esc(t.maintainer)}</td><td>${esc(t.description)}</td></tr>`).join("");
+}
+
+function render(){ const l=filtered(); tiles(l); heat(l); stages(l); network(l); table(l); timeline(l); }
+["#fRegion","#fApproach","#fRel"].forEach(s=>$(s).addEventListener("change",render));
+$("#fText").addEventListener("input",render);
+$("#reset").addEventListener("click",()=>{["#fRegion","#fApproach","#fRel","#fText"].forEach(s=>$(s).value="");render();});
+document.addEventListener("mouseover",e=>{const t=e.target.closest("[data-tip]"); if(t) showTip(e,t.dataset.tip); else hideTip();});
+document.addEventListener("mousemove",e=>{ if(tip.style.display==="block") moveTip(e); });
+tools(); render();
+</script>
+</body>
+</html>

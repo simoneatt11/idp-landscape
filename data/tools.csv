@@ -1,0 +1,13 @@
+id,name,category,maintainer,url,description,sources
+disprot,DisProt,database,DisProt consortium (Padova-led),https://disprot.org,Manually curated gold-standard database of experimentally validated disordered regions,S61;S43
+mobidb,MobiDB,database,University of Padova,https://mobidb.org,Disorder and mobility annotations across UniProt (predicted + curated),S62
+ped,Protein Ensemble Database (PED),database,University of Padova,https://proteinensemble.org,Primary repository of deposited structural ensembles of IDPs,S63
+afdb,AlphaFold DB (pLDDT as disorder proxy),database,EMBL-EBI / Google DeepMind,https://alphafold.ebi.ac.uk,Low-confidence (pLDDT) regions widely used as a disorder predictor - not an ensemble,S64
+caid,CAID (Critical Assessment of Intrinsic Disorder),benchmark,CAID organisers (Tosatto et al.),https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12750029/,Community benchmark of disorder & binding predictors; round 3 (2025) dominated by protein-language-model methods,S43;S44
+metapredict,metapredict,predictor,Holehouse lab,https://github.com/idptools,Fast deep-learning disorder predictor,S65
+albatross,ALBATROSS,ensemble-property model,Holehouse lab,https://github.com/idptools,Predicts IDR ensemble dimensions (Rg; Re; scaling exponent) from sequence; proteome-scale,S42;S65
+starling,STARLING,generative ensemble model,Holehouse lab,https://github.com/idptools,Latent diffusion model generating coarse-grained IDR ensembles in seconds (Nature 2026),S41
+calvados,CALVADOS,simulation force field,Lindorff-Larsen lab,https://github.com/KULL-Centre/CALVADOS,Coarse-grained model for IDPs and condensates,S66
+idr-binders,logos / RFdiffusion IDR binder design,design method,Baker lab (IPD),https://www.ipd.uw.edu/2025/07/hitting-undruggable-disease-targets,De novo protein binders to disordered regions (Science & Nature 2025),S39;S40;S67
+dropscan,DropScan,screening platform,Pilong Li lab (Tsinghua),https://www.thepaper.cn/newsDetail_forward_23736832,Computer-vision high-throughput screen for small molecules modulating condensates,S48
+topos-1,Topos-1 / Topos-Bind,commercial model,Topos Bio,,Company foundation models for IDP ensembles and small-molecule binding (company-reported benchmarks),S01;S57
